@@ -5,7 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func SetupRouter(boardHandler *api.BoardHandler) *gin.Engine {
+func SetupRouter(boardHandler *api.BoardHandler, websocketHandler *api.WebSocketHandler) *gin.Engine {
     r := gin.Default()
 
     boardRoutes := r.Group("/board")
@@ -15,6 +15,12 @@ func SetupRouter(boardHandler *api.BoardHandler) *gin.Engine {
         boardRoutes.GET("/uuid/:uuid", boardHandler.GetBoardByUuid)
         boardRoutes.PUT("/:id", boardHandler.UpdateBoardTitle)
     }
+
+    wsRoutes := r.Group("/ws")
+    {
+        wsRoutes.GET("/uuid/:uuid", websocketHandler.HandleWebSocket)
+    }
+    
 
     return r
 }

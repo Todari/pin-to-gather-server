@@ -19,7 +19,10 @@ func main() {
     boardService := services.NewBoardService(boardRepository)
     boardHandler := api.NewBoardHandler(boardService)
 
-    r := routes.SetupRouter(boardHandler) // *gin.Engine 반환
+    websocketService := services.NewWebSocketService()
+    websocketHandler := api.NewWebSocketHandler(websocketService)
+
+    r := routes.SetupRouter(boardHandler, websocketHandler) // *gin.Engine 반환
 
     port := config.AppConfig.ServerPort
     log.Println("🚀 Server running on port:", port)
