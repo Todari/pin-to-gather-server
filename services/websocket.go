@@ -1,6 +1,7 @@
 package services
 
 import (
+	"log"
 	"sync"
 
 	"github.com/gorilla/websocket"
@@ -12,11 +13,22 @@ type Client struct {
 	Conn      *websocket.Conn
 }
 
+type Coordinate struct {
+	X float64 `json:"x"`
+	Y float64 `json:"y"`
+}
+
+type Bounds struct {
+	Min Coordinate `json:"min"`
+	Max Coordinate `json:"max"`
+}
+
 type CursorMessage struct {
-	UserID    string  `json:"userId"`
-	BoardUuid string  `json:"boardUuid"`
-	X         float64 `json:"x"`
-	Y         float64 `json:"y"`
+	UserID    string     `json:"userId"`
+	BoardUuid string     `json:"boardUuid"`
+	Center    Coordinate `json:"center"`
+	Bounds    Bounds     `json:"bounds"`
+	Zoom      float64    `json:"zoom"`
 }
 
 type WebSocketService struct {
@@ -55,6 +67,7 @@ func (s *WebSocketService) BroadcastMessage(msg CursorMessage) {
 	defer s.clientsMux.RUnlock()
 
 	for client := range s.clients {
+		log.Printf("Sending message to client: %+v\n", client)
 		if client.BoardUuid == msg.BoardUuid && client.ID != msg.UserID {
 			err := client.Conn.WriteJSON(msg)
 			if err != nil {

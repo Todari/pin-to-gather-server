@@ -18,7 +18,7 @@ func SetupRouter(boardHandler *api.BoardHandler, websocketHandler *api.WebSocket
 
     wsRoutes := r.Group("/ws")
     {
-        wsRoutes.GET("/uuid/:uuid", websocketHandler.HandleWebSocket)
+        wsRoutes.GET("/uuid/:boardUuid", websocketHandler.HandleWebSocket)
     }
     
 
