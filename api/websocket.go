@@ -34,6 +34,8 @@ func (h *WebSocketHandler) HandleWebSocket(c *gin.Context) {
 	userID := c.Query("userId")
 	boardUuid := c.Param("boardUuid")
 
+	log.Printf("New client connected: %s\n", boardUuid)
+
 	client := h.Service.NewClient(userID, boardUuid, conn)
 	h.Service.AddClient(client)
 
