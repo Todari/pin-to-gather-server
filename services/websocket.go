@@ -71,6 +71,8 @@ func (s *WebSocketService) BroadcastMessage(msg CursorMessage) {
 		if client.BoardUuid == msg.BoardUuid && client.ID != msg.UserID {
 			err := client.Conn.WriteJSON(msg)
 			if err != nil {
+				log.Printf("Failed to send message to client %s: %v\n", client.ID, err)
+				go s.RemoveClient(client)
 				continue
 			}
 		}
