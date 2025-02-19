@@ -45,9 +45,15 @@ func (h *WebSocketHandler) HandleWebSocket(c *gin.Context) {
 		var msg services.CursorMessage
 		err := conn.ReadJSON(&msg)
 		if err != nil {
-			log.Println("Read Error:", err)
+			if websocket.IsUnexpectedCloseError(err, websocket.CloseGoingAway, websocket.CloseAbnormalClosure) {  
+                log.Println("Read Error:", err)  
+            }  
 			h.Service.RemoveClient(client)
 			break
+		}
+		if msg.UserID == "" || msg.BoardUuid == "" {  
+			log.Println("Invalid message received")
+			continue
 		}
 		h.Service.BroadcastMessage(msg)
 	}
