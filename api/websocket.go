@@ -3,6 +3,7 @@ package api
 import (
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/Todari/pin-to-gather-server/services"
 	"github.com/gin-gonic/gin"
@@ -19,7 +20,8 @@ func NewWebSocketHandler(service *services.WebSocketService) *WebSocketHandler {
 
 var upgrader = websocket.Upgrader{
 	CheckOrigin: func(r *http.Request) bool {
-		return true
+		origin := r.Header.Get("Origin")
+		return origin == os.Getenv("ALLOWED_ORIGIN")
 	},
 }
 
