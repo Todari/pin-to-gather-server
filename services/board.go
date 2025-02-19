@@ -24,16 +24,12 @@ func (s *BoardService) RegisterBoard(board *models.Board) error {
     return s.Repo.CreateBoard(board)
 }
 
-func (s *BoardService) GetBoard(id uint) (*models.Board, error) {
-    return s.Repo.GetBoard(id)
+func (s *BoardService) GetBoard(uuid string) (*models.Board, error) {
+    return s.Repo.GetBoard(uuid)
 }
 
-func (s *BoardService) GetBoardByUuid(uuid string) (*models.Board, error) {
-    return s.Repo.GetBoardByUuid(uuid)
-}
-
-func (s *BoardService) UpdateBoardTitle(id uint, newTitle string) (*models.Board, error) {
-    board, err := s.Repo.GetBoard(id)
+func (s *BoardService) UpdateBoardTitle(uuid string, newTitle string) (*models.Board, error) {
+    board, err := s.Repo.GetBoard(uuid)
     if err != nil {
         return nil, err
     }

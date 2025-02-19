@@ -17,15 +17,7 @@ func (r *BoardRepository) CreateBoard(board *models.Board) error {
     return r.DB.Create(board).Error
 }
 
-func (r *BoardRepository) GetBoard(id uint) (*models.Board, error) {
-    var board models.Board
-    if err := r.DB.First(&board, id).Error; err != nil {
-        return nil, err
-    }
-    return &board, nil
-}
-
-func (r *BoardRepository) GetBoardByUuid(uuid string) (*models.Board, error) {
+func (r *BoardRepository) GetBoard(uuid string) (*models.Board, error) {
     var board models.Board
     if err := r.DB.Where("uuid = ?", uuid).First(&board).Error; err != nil {
         return nil, err
