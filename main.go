@@ -22,7 +22,10 @@ func main() {
     websocketService := services.NewWebSocketService()
     websocketHandler := api.NewWebSocketHandler(websocketService)
 
-    r := routes.SetupRouter(boardHandler, websocketHandler) // *gin.Engine 반환
+	naverLocalSearchService := services.NewLocalSearchService()
+	naverLocalSearchHandler := api.NewNaverLocalSearchHandler(naverLocalSearchService)
+
+    r := routes.SetupRouter(boardHandler, websocketHandler, naverLocalSearchHandler) // *gin.Engine 반환
 
     port := config.AppConfig.ServerPort
     log.Println("🚀 Server running on port:", port)
