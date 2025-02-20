@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func SetupRouter(boardHandler *api.BoardHandler, websocketHandler *api.WebSocketHandler) *gin.Engine {
+func SetupRouter(boardHandler *api.BoardHandler, websocketHandler *api.WebSocketHandler, naverLocalSearchHandler *api.NaverLocalSearchHandler) *gin.Engine {
 	r := gin.Default()
 
 	// CORS 설정 추가
@@ -25,6 +25,11 @@ func SetupRouter(boardHandler *api.BoardHandler, websocketHandler *api.WebSocket
 		boardRoutes.POST("", boardHandler.RegisterBoard)
 		boardRoutes.GET("/:uuid", boardHandler.GetBoard)
 		boardRoutes.PUT("/:uuid", boardHandler.UpdateBoardTitle)
+	}
+
+	naverLocalSearchRoutes := r.Group("/naver")
+	{
+		naverLocalSearchRoutes.GET("/local-search", naverLocalSearchHandler.SearchLocal)
 	}
 
 	wsRoutes := r.Group("/ws")
