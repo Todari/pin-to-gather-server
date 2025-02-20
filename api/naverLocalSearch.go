@@ -11,6 +11,7 @@ type NaverLocalSearchHandler struct {
 	Service *services.LocalSearchService
 }
 
+//TODO: naverLocalSearch Cache 추가
 func NewNaverLocalSearchHandler(service *services.LocalSearchService) *NaverLocalSearchHandler {
 	return &NaverLocalSearchHandler{Service: service}
 }
