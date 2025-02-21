@@ -1,0 +1,44 @@
+name: Merge Pull Requests
+
+on:
+  pull_request:
+    types: [closed]
+
+jobs:
+  close-issue:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Extract Issue Number from Branch
+        id: extract
+        run: |
+          ISSUE_NUMBER=$(echo "${{ github.event.pull_request.head.ref }}" | grep -oP '(?<=#)\d+')
+          echo "ISSUE_NUMBER=$ISSUE_NUMBER" >> $GITHUB_ENV
+
+      - name: Close Issue
+        if: env.ISSUE_NUMBER != ''
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.rest.issues.update({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: parseInt(process.env.ISSUE_NUMBER),
+              state: 'closed'
+            })
+
+  delete-branch:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Delete Branch
+        uses: actions/github-script@v6
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            github.rest.repos.deleteBranch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              branch: '${{ github.event.pull_request.head.ref }}'
+            })

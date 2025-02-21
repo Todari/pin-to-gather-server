@@ -1,0 +1,60 @@
+name: Create Pull Requests
+
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      # 저장소 체크아웃
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      # Go 설치 (최신 버전)
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: 1.24
+
+      # 의존성 설치
+      - name: Install Dependencies
+        run: |
+          go mod tidy
+          go mod download
+
+      # 코드 포맷팅 검사
+      - name: Check Code Formatting
+        run: |
+          if [ -n "$(gofmt -l .)" ]; then
+            echo "Code is not formatted properly. Run 'gofmt -w .'"
+            exit 1
+          fi
+
+      # 린트 검사
+      - name: Run Linter
+        uses: golangci/golangci-lint-action@v3
+        with:
+          version: latest
+          args: --timeout=5m
+
+      # 보안 점검 (gosec 사용)
+      - name: Run Security Scan
+        run: |
+          go install github.com/securego/gosec/v2/cmd/gosec@latest
+          gosec ./...
+
+      # 유닛 테스트 실행 (커버리지 포함)
+      - name: Run Tests
+        run: go test -v -cover ./...
+
+      # 빌드 확인
+      - name: Build Go Application
+        run: go build -o main .
+
+      # Docker 빌드 확인
+      - name: Docker Build
+        run: docker build -t my-go-app .
