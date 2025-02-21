@@ -1,10 +1,10 @@
 package models
 
 type NaverLocalSearchResponse struct {
-	LastBuildDate string `json:"lastBuildDate"`
-	Total         int    `json:"total"`
-	Start         int    `json:"start"`
-	Display       int    `json:"display"`
+	LastBuildDate string                 `json:"lastBuildDate"`
+	Total         int                    `json:"total"`
+	Start         int                    `json:"start"`
+	Display       int                    `json:"display"`
 	Items         []NaverLocalSearchItem `json:"items"`
 }
 

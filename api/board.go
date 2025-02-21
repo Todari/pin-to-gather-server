@@ -10,11 +10,11 @@ import (
 )
 
 type BoardHandler struct {
-    Service *services.BoardService
+	Service *services.BoardService
 }
 
 func NewBoardHandler(service *services.BoardService) *BoardHandler {
-    return &BoardHandler{Service: service}
+	return &BoardHandler{Service: service}
 }
 
 func (h *BoardHandler) RegisterBoard(c *gin.Context) {

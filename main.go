@@ -12,22 +12,22 @@ import (
 )
 
 func main() {
-    config.LoadConfig()    // 환경 변수 로드
-    database.ConnectDatabase() // PostgreSQL 연결
+	config.LoadConfig()        // 환경 변수 로드
+	database.ConnectDatabase() // PostgreSQL 연결
 
-    boardRepository := repository.NewBoardRepository(database.DB)
-    boardService := services.NewBoardService(boardRepository)
-    boardHandler := api.NewBoardHandler(boardService)
+	boardRepository := repository.NewBoardRepository(database.DB)
+	boardService := services.NewBoardService(boardRepository)
+	boardHandler := api.NewBoardHandler(boardService)
 
-    websocketService := services.NewWebSocketService()
-    websocketHandler := api.NewWebSocketHandler(websocketService)
+	websocketService := services.NewWebSocketService()
+	websocketHandler := api.NewWebSocketHandler(websocketService)
 
 	naverLocalSearchService := services.NewLocalSearchService()
 	naverLocalSearchHandler := api.NewNaverLocalSearchHandler(naverLocalSearchService)
 
-    r := routes.SetupRouter(boardHandler, websocketHandler, naverLocalSearchHandler) // *gin.Engine 반환
+	r := routes.SetupRouter(boardHandler, websocketHandler, naverLocalSearchHandler) // *gin.Engine 반환
 
-    port := config.AppConfig.ServerPort
-    log.Println("🚀 Server running on port:", port)
-    r.Run(":" + port)
+	port := config.AppConfig.ServerPort
+	log.Println("🚀 Server running on port:", port)
+	r.Run(":" + port)
 }
